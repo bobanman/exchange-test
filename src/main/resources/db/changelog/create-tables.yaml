@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: bohdan
+      changes:
+        - createTable:
+            tableName: currency
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: char(3)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: exchange_rate
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: from_curr_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rate_from_currency
+                    references: currency(id)
+              - column:
+                  name: to_curr_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_rate_to_currency
+                    references: currency(id)
+              - column:
+                  name: rate
+                  type: currency
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: commission
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: exchange_rate_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_commission_exchange_rate
+                    references: exchange_rate(id)
+              - column:
+                  name: percent
+                  type: currency
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 2
+      author: bohdan
+      changes:
+        - addUniqueConstraint:
+            tableName: exchange_rate
+            columnNames: from_curr_id, to_curr_id
