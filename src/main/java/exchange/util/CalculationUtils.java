@@ -15,13 +15,13 @@ public class CalculationUtils {
         BigDecimal reverseRate = BigDecimal.valueOf(1.0d)
                 .divide(
                         BigDecimal.valueOf(rate),
-                        SCALE,
+                        4,
                         RoundingMode.HALF_DOWN);
         return reverseRate.doubleValue();
     }
 
     public static double calculateExchangeAmount(double amount, double rate, double commission) {
-        BigDecimal result = BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(rate));
+        BigDecimal result = BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(rate)).setScale(SCALE, RoundingMode.HALF_DOWN);
         result = result.subtract(result.multiply(BigDecimal.valueOf(commission/100.0d)));
         return result.setScale(SCALE, RoundingMode.HALF_DOWN).doubleValue();
     }
