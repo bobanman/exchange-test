@@ -14,13 +14,13 @@ databaseChangeLog:
         - sql:
             sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (1, 1, 1.00)
         - sql:
-            sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (1, 2, 1.13)
+            sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (1, 2, 1.1111)
         - sql:
             sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (1, 3, 27.55)
         - sql:
             sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (1, 4, 74.55)
         - sql:
-            sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (2, 1, 0.89)
+            sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (2, 1, 0.9)
         - sql:
             sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (2, 2, 1.00)
         - sql:
@@ -45,3 +45,7 @@ databaseChangeLog:
             sql: insert into exchange_rate (from_curr_id, to_curr_id, rate) values (4, 4, 1.00)
         - sql:
             sql: insert into commission (exchange_rate_id, percent) select id, 5.0 from exchange_rate
+        - sql:
+            sql: update commission set percent = 0 where id = 2
+        - sql:
+            sql: update commission set percent = 0 where id = 5

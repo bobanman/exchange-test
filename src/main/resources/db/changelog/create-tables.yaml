@@ -50,7 +50,7 @@ databaseChangeLog:
                     references: currency(id)
               - column:
                   name: rate
-                  type: currency
+                  type: decimal(10, 4)
                   constraints:
                     nullable: false
         - createTable:
@@ -68,11 +68,12 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+                    unique: true
                     foreignKeyName: fk_commission_exchange_rate
                     references: exchange_rate(id)
               - column:
                   name: percent
-                  type: currency
+                  type: decimal(5, 2)
                   constraints:
                     nullable: false
   - changeSet:
