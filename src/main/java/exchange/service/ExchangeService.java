@@ -18,31 +18,24 @@ public class ExchangeService {
     private final CommissionRepository commissionRepository;
 
     public ExchangeRequestDTO exchange(ExchangeRequestDTO exchangeRequestDTO) {
-        CurrencyCode from, to;
+        CurrencyCode from = exchangeRequestDTO.getCurrencyFrom();
+        CurrencyCode to = exchangeRequestDTO.getCurrencyTo();
         double amount;
-        if(exchangeRequestDTO.getOperationType().equals(OperationType.GIVE)) {
-            from = exchangeRequestDTO.getCurrencyFrom();
-            to = exchangeRequestDTO.getCurrencyTo();
-            amount = exchangeRequestDTO.getAmountFrom();
-        } else {
-            from = exchangeRequestDTO.getCurrencyTo();
-            to = exchangeRequestDTO.getCurrencyFrom();
-            amount = exchangeRequestDTO.getAmountTo();
-        }
         ExchangeRate rate = exchangeRateService.findByCurrencyPair(from, to);
         Commission commission = commissionRepository.findFirstByRate(rate).orElse(
                 Commission.builder().
                         percent(0.0).
                         build());
 
-        amount = CalculationUtils.calculateExchangeAmount(amount, rate.getRate(), commission.getPercent());
-        exchangeRequestDTO.setCommissionAmount(commission.getPercent());
         if(exchangeRequestDTO.getOperationType().equals(OperationType.GIVE)) {
+            amount = CalculationUtils.calculateAmountTo(exchangeRequestDTO.getAmountFrom(), rate.getRate(), commission.getPercent());
             exchangeRequestDTO.setAmountTo(amount);
         } else {
+            amount = CalculationUtils.calculateAmountFrom(exchangeRequestDTO.getAmountTo(), rate.getRate(), commission.getPercent());
             exchangeRequestDTO.setAmountFrom(amount);
         }
 
+        exchangeRequestDTO.setCommissionAmount(commission.getPercent());
         return exchangeRequestDTO;
     }
 }

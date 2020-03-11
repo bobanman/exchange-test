@@ -16,13 +16,28 @@ public class CalculationUtils {
                 .divide(
                         BigDecimal.valueOf(rate),
                         4,
-                        RoundingMode.HALF_DOWN);
+                        RoundingMode.HALF_UP);
         return reverseRate.doubleValue();
     }
 
-    public static double calculateExchangeAmount(double amount, double rate, double commission) {
-        BigDecimal result = BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(rate)).setScale(SCALE, RoundingMode.HALF_DOWN);
-        result = result.subtract(result.multiply(BigDecimal.valueOf(commission/100.0d)));
-        return result.setScale(SCALE, RoundingMode.HALF_DOWN).doubleValue();
+    public static double calculateAmountTo(double amount, double rate, double commission) {
+        double result = amount * rate;
+        result = result - result * (commission / 100d);
+        return round(result);
     }
+
+    public static double calculateAmountFrom(double amount, double rate, double commission) {
+        double result = 100d * amount / (100d - commission);
+        result = result / rate;
+        return round(result);
+    }
+
+    private static double round(double value) {
+        return round(value, RoundingMode.HALF_UP);
+    }
+
+    private static double round(double value, RoundingMode rm) {
+        return BigDecimal.valueOf(value).setScale(SCALE, rm).doubleValue();
+    }
+
 }
